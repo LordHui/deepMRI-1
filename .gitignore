@@ -2,3 +2,5 @@
 *.out
 *.asv
 *.swp
+*.DS_Store
+
