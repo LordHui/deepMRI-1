@@ -13,12 +13,10 @@ switch mode
     case 'img_full'
         data = fftn(fftshift(k_full));
         data = data ./ max(abs(data(:)));
-        disp(max(abs(data(:))))
     case 'img_sub'
         k_sub = k_full .* Mask; 
         data = fftn(fftshift(k_sub));
         data = data ./ max(abs(data(:)));
-        disp(max(abs(data(:))))
 end
 %% concatenate the complex data to be 2-chanell real tensors. 
 ll = size(data);
