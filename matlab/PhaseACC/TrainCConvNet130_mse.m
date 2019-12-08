@@ -2,23 +2,20 @@
 clear
 clc
 
-volReader2 = @(x) matRead2(x);
+load Mask_variable_ratio_4.mat; 
+
+volReader1 = @(x) yangDataRead(x, Mask, 'img_sub');
 % inputs = imageDatastore('../inputPatch48Mask/*.mat', ...
 % 'FileExtensions','.mat','ReadFcn',volReader);
-imgs = imageDatastore('./img_labels/*.mat', ...
-'FileExtensions','.mat','ReadFcn',volReader2);
+imgs = imageDatastore('./**/k_full_*.mat', ...
+'FileExtensions','.mat','ReadFcn',volReader1);
 
-volReader = @(x) matRead(x);
-ks = imageDatastore('./k_labels/*.mat', ...
+volReader2 = @(x) yangDataRead(x, Mask, 'img_full');
+ks = imageDatastore('./**/k_full_*.mat', ...
 'FileExtensions','.mat','ReadFcn',volReader2);
 
 NumFiles = length(imgs.Files);
-%% preprocessing: subsampling; 
-% load('Mask_variable_ratio_4');
-% k_subs = transform(ks, @(x) Subsampling(x, Mask));
-% imgs_subs = transform(k_subs, @(x) fftn(fftshift(x)));
-% %% preprocessing: concatenation
-% imgs_subs = transform(imgs_subs, @(x) Concat(x));
+disp(NumFiles)
 %% 
 patchSize = [48, 48, 48];
 patchPerImage = 1;
