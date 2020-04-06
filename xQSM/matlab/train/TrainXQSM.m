@@ -39,7 +39,7 @@ disp(xQSM.Layers) % check layers information.
 initialLearningRate = 0.001;
 maxEpochs = 100; % 
 minibatchSize = miniBatchSize; % mini-batch size; 
-l2reg = 1e-5;  % weight decay factor;
+l2reg = 1e-7;  % weight decay factor;
 
 options = trainingOptions('adam',...
     'LearnRateSchedule','piecewise',...
