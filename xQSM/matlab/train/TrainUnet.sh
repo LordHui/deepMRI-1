@@ -5,13 +5,11 @@
 #SBATCH -c 3
 #SBATCH --mem=40000
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:tesla-smx2:1
+#SBATCH --gres=gpu:tesla-smx2:2
 
 module purge
 module load gnu7
-module load cuda/10.0.130
-module load anaconda/3.6
 module load mvapich2
 module load matlab/R2019a
 
-srun matlab -r "TrainOctNet130_mse"
+srun matlab -r "TrainOriUnet"
