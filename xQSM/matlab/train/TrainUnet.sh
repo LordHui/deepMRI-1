@@ -9,7 +9,6 @@
 
 module purge
 module load gnu7
-module load cuda/10.0.130
 module load mvapich2
 module load matlab/R2019a
 
