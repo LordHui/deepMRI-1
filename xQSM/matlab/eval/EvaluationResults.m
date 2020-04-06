@@ -2,6 +2,7 @@
 % read the local field maps as V_Field; 
 % note the size of the field maps need to be divisibel by 8;
 addpath ./nii 
+addpath ../blocks3D
 nii = load_nii('lfs_cosmos_5_6DOF_resharp_1e-6.nii'); % replace the file name with yours. 
 V_Field = nii.img;
 mask = V_Field ~= 0; 
@@ -58,3 +59,5 @@ save_nii(nii, 'Chi_xQSM_syn_lfs_cosmos.nii')
 
 nii = make_nii(xQSM_syn_recon, [1 , 1, 1]);
 save_nii(nii, 'Chi_Unet_syn_lfs_cosmos.nii')
+
+

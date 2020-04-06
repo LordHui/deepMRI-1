@@ -8,7 +8,7 @@
 function lgraph = Create3DUNet(inputTileSize)
 
 %% default parameters which are the same as those of xQSM network; 
-encoderDepth = 4;  
+encoderDepth = 2;  
 initialEncoderNumChannels = 64;
 inputNumchannels = inputTileSize(4);
 convFilterSize = 3;

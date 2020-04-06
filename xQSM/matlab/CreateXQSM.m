@@ -18,7 +18,7 @@ info.portalL = '';  % connections for adjecent OctConv layers of low resolutions
 info.numInputChannels = 64; % the default number of input channels
 info.numOutputChannels = 64; % the default number of output channels
 %% default encoding path: 2
-encoding_depth = 4;  % adjusted for the training data (patch size 48^3);
+encoding_depth = 2;  % adjusted for the training data (patch size 48^3);
 for i = 1 : encoding_depth
     if i == 1
         %% first layer;
@@ -97,7 +97,6 @@ for i = 1 : encoding_depth
         info_out = info;
         info_out.Alphay=0;
         info_out.numInputChannels = info_net.numOutputChannels;
-        info_out.numOutputChannels = 64;
         info_out.SectionName = 'Output';
         [oct_out, info_out] = OctOutput3D(info_out);
         [octnet, info_net] = connectOctOut(octnet,oct_out,info_net, info_out);
