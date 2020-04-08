@@ -1,12 +1,12 @@
-% Eval performs the dipole inversin on a local field map (V_Field)
-% Recon = Eval(V_Field, 'xQSM', 'gpu'); returns xQSM reconstruction on the
-% local field map V_Field with GPU.
-% Recon = Eval(V_Field, 'Unet', 'gpu'); returns Unet reconstruction on the
-% local field map V_Field with GPU.
+% Eval performs the dipole inversin on a local field map (Field)
+% Recon = Eval(Field, 'xQSM', 'gpu'); returns xQSM reconstruction on the
+% local field map Field with GPU.
+% Recon = Eval(Field, 'Unet', 'gpu'); returns Unet reconstruction on the
+% local field map Field with GPU.
 
-function Recon = Eval(V_Field, NetType, ComputeEvn)
+function Recon = Eval(Field, NetType, ComputeEvn)
 %EVAL Summary of this function goes here
-imSize= size(V_Field);
+imSize= size(Field);
 net_temp = load(NetType);
 net = net_temp.net;
 newInput = image3dInputLayer(imSize,...
@@ -20,6 +20,6 @@ clear net;
 %% prediction
 %% for image size over 200* 300* 200, at least 32 GB memory is necessary;
 predict(L1Net,  zeros(imSize), 'ExecutionEnvironment', ComputeEvn); % to pre-load the parameters into the memory;
-tic, Recon = predict(L1Net,  V_Field, 'ExecutionEnvironment', ComputeEvn);toc
+tic, Recon = predict(L1Net,  Field, 'ExecutionEnvironment', ComputeEvn);toc
 end
 
