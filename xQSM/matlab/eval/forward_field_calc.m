@@ -1,3 +1,5 @@
+% forward_field_calc simulaltes a local field map (field) from the input
+% QSM label (sus) with specific parameters. 
 
 function field = forward_field_calc(sus, vox, z_prjs, padding_flag)
 
