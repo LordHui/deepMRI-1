@@ -1,5 +1,9 @@
+% build OctConv Input layer (input layer); 
+% inputTileSize: image size; 
+% info: informations to build the block, see the detailed structure in CreatexQSM.m;
+% lgraph: the network graph; 
+
 function [lgraph, info] = OctInut3D(info,inputTileSize)
-%% build OctConv Input layer; 
 lgraph = layerGraph();
 layers = image3dInputLayer(inputTileSize,...
     'Name','ImageInputLayer', 'Normalization', 'none');

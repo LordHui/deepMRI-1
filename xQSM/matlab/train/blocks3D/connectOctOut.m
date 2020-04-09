@@ -1,5 +1,5 @@
+% connect the final layer into xQSM network; 
 function [lgraph, info] = connectOctOut(OctConv1,OctConv2,info1, info2)
-%% connect the final layer into xQSM network; 
 lgraph = OctConv1;
 info = info1; 
 tempLayers = OctConv2.Layers;

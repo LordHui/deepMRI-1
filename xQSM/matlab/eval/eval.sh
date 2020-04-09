@@ -12,4 +12,4 @@ module load gnu7
 module load mvapich2
 module load matlab/R2019a
 
-srun matlab -r "EvaluationResults"
+srun matlab -r "run_demo"

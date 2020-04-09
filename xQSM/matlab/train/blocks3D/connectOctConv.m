@@ -1,5 +1,5 @@
+% connect two OctCnv blocks; 
 function [lgraph, info] = connectOctConv(OctConv1,OctConv2,info1, info2)
-%% connect two OctCnv blocks; 
 %   Detailed explanation goes here
 lgraph = OctConv1;
 info = info1; 

@@ -1,5 +1,6 @@
+% build Upconv blocks to form U-net like structure; 
+
 function [octnet, info] = octUnpool3D(octnet, info, sections, encoding_depth)
-%% build Upconv blocks to form U-net like structure; 
 f = 0.01;
 UpconvFilterSize = info.UpconvFilterSize;
 convFilterSize = info.convFilterSize; 

@@ -1,5 +1,8 @@
+% build OctConv Input layer (Output layer); 
+% info: informations to build the block, see the detailed structure in CreatexQSM.m;
+% lgraph: the network graph; 
+
 function [lgraph, info] = OctOutput3D(info)
-%% Build OctConv Output Layer; 
 lgraph = layerGraph();
 
 Alphax = info.Alphax; 
