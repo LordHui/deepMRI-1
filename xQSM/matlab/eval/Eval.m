@@ -24,7 +24,7 @@ tic, Recon = predict(L1Net,  Field, 'ExecutionEnvironment', ComputeEvn);toc
 if contains(NetType, 'syn')
     % the reconstrutcion need to be multiplied by 2 in accordance with our training scheme for
     % networks trained with synthetic datasets; 
-    Recon = Reon * 2; 
+    Recon = Recon * 2; 
 end
 end
 
