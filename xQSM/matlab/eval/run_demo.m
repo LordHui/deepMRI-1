@@ -32,7 +32,7 @@ title('Slice 80 of the COSMOS Label');
 
 
 %% start recons
-if canUseGPU()
+if ~canUseGPU()
     % (1) if your MATLAB is configured with CUDA GPU acceleration
     Unet_invivo_recon = Eval(field, 'Unet_invivo', 'gpu');
     xQSM_invivo_recon = Eval(field, 'xQSM_invivo', 'gpu');
@@ -106,20 +106,20 @@ title('Error');
 PSNR_xQSM_invivo = psnr(xQSM_invivo_recon, single(label));
 fprintf('PSNR of xQSM_invivo is %f\n', PSNR_xQSM_invivo);
 PSNR_Unet_invivo = psnr(Unet_invivo_recon, single(label));
-printf('PSNR of Unet_invivo is %f\n', PSNR_Unet_invivo);
+fprintf('PSNR of Unet_invivo is %f\n', PSNR_Unet_invivo);
 PSNR_xQSM_syn = psnr(xQSM_syn_recon, single(label));
-printf('PSNR of xQSM_syn is %f\n', PSNR_xQSM_syn);
+fprintf('PSNR of xQSM_syn is %f\n', PSNR_xQSM_syn);
 PSNR_Unet_syn = psnr(Unet_syn_recon, single(label));
-printf('PSNR of Unet_syn is %f\n', PSNR_Unet_syn);
+fprintf('PSNR of Unet_syn is %f\n', PSNR_Unet_syn);
 
 SSIM_xQSM_invivo = ssim(xQSM_invivo_recon, single(label));
 fprintf('SSIM of xQSM_invivo is %f\n', SSIM_xQSM_invivo);
 SSIM_Unet_invivo = ssim(Unet_invivo_recon, single(label));
-printf('SSIM of Unet_invivo is %f\n', SSIM_Unet_invivo);
+fprintf('SSIM of Unet_invivo is %f\n', SSIM_Unet_invivo);
 SSIM_xQSM_syn = ssim(xQSM_syn_recon, single(label));
-printf('SSIM of xQSM_syn is %f\n', SSIM_xQSM_syn);
+fprintf('SSIM of xQSM_syn is %f\n', SSIM_xQSM_syn);
 SSIM_Unet_syn = ssim(Unet_syn_recon, single(label));
-printf('SSIM of Unet_syn is %f\n', SSIM_Unet_syn);
+fprintf('SSIM of Unet_syn is %f\n', SSIM_Unet_syn);
 
 %% save the files for ROI measurements; 
 nii = make_nii(xQSM_invivo_recon, [1, 1, 1]);
