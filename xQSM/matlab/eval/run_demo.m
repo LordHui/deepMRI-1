@@ -18,8 +18,8 @@ if mod(imSize, 8)
     [field, pos] = ZeroPadding(field, 8);
 end
 % illustration of one central axial slice of the input field 
-figure, imagesc(field(:,:,80)'); colormap gray; axis square; colorbar; caxis([-0.05, 0.05])
-title('Slice 80 of the Input Field Map');
+figure, imagesc(field(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.05, 0.05])
+title('Slice 80 of the Input Field Map (ppm)');
 
 
 %% read label (for evaluation purpose)
@@ -27,8 +27,8 @@ nii = load_nii('cosmos_label.nii'); % replace the file name with yours.
 label = double(nii.img);
 
 % illustration of one central axial slice of the COSMOS label 
-figure, imagesc(label(:,:,80)'); colormap gray; axis square; colorbar; caxis([-0.1, 0.2])
-title('Slice 80 of the COSMOS Label');
+figure, imagesc(label(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.1, 0.2])
+title('Slice 80 of the COSMOS Label (ppm)');
 
 
 %% start recons
@@ -74,31 +74,31 @@ Unet_syn_recon = Unet_syn_recon .* mask;
 
 %% illustration of one central axial slice of the four different reconstructions; 
 figure,
-subplot(121), imagesc(xQSM_invivo_recon(:,:,80)'); colormap gray; axis square; colorbar; caxis([-0.1, 0.2])
-title('Slice 80 of the xQSM_{invivo} Recon');
+subplot(121), imagesc(xQSM_invivo_recon(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.1, 0.2])
+title('Slice 80 of the xQSM_{invivo}');
 err  = xQSM_invivo_recon - label;
-subplot(122), imagesc(err(:,:,80)'); colormap gray; axis square; colorbar; caxis([-0.1, 0.2])
+subplot(122), imagesc(err(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.1, 0.2])
 title('Error');
 
 figure,
-subplot(121), imagesc(Unet_invivo_recon(:,:,80)'); colormap gray; axis square; colorbar; caxis([-0.1, 0.2])
-title('Slice 80 of the Unet_{invivo} Recon');
+subplot(121), imagesc(Unet_invivo_recon(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.1, 0.2])
+title('Slice 80 of the Unet_{invivo}');
 err  = Unet_invivo_recon - label;
-subplot(122), imagesc(err(:,:,80)'); colormap gray; axis square; colorbar; caxis([-0.1, 0.2])
+subplot(122), imagesc(err(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.1, 0.2])
 title('Error');
 
 figure,
-subplot(121), imagesc(xQSM_syn_recon(:,:,80)'); colormap gray; axis square; colorbar; caxis([-0.1, 0.2])
-title('Slice 80 of the xQSM_{syn} Recon');
+subplot(121), imagesc(xQSM_syn_recon(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.1, 0.2])
+title('Slice 80 of the xQSM_{syn}');
 err  = xQSM_syn_recon - label;
-subplot(122), imagesc(err(:,:,80)'); colormap gray; axis square; colorbar; caxis([-0.1, 0.2])
-title('Errro');
+subplot(122), imagesc(err(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.1, 0.2])
+title('Error');
 
 figure,
-subplot(121), imagesc(Unet_syn_recon(:,:,80)'); colormap gray; axis square; colorbar; caxis([-0.1, 0.2])
-title('Slice 80 of the Unet_{syn} Recon');
+subplot(121), imagesc(Unet_syn_recon(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.1, 0.2])
+title('Slice 80 of the Unet_{syn}');
 err  = Unet_syn_recon - label;
-subplot(122), imagesc(err(:,:,80)'); colormap gray; axis square; colorbar; caxis([-0.1, 0.2])
+subplot(122), imagesc(err(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.1, 0.2])
 title('Error');
 
 
@@ -106,20 +106,20 @@ title('Error');
 PSNR_xQSM_invivo = psnr(xQSM_invivo_recon, single(label));
 fprintf('PSNR of xQSM_invivo is %f\n', PSNR_xQSM_invivo);
 PSNR_Unet_invivo = psnr(Unet_invivo_recon, single(label));
-printf('PSNR of Unet_invivo is %f\n', PSNR_Unet_invivo);
+fprintf('PSNR of Unet_invivo is %f\n', PSNR_Unet_invivo);
 PSNR_xQSM_syn = psnr(xQSM_syn_recon, single(label));
-printf('PSNR of xQSM_syn is %f\n', PSNR_xQSM_syn);
+fprintf('PSNR of xQSM_syn is %f\n', PSNR_xQSM_syn);
 PSNR_Unet_syn = psnr(Unet_syn_recon, single(label));
-printf('PSNR of Unet_syn is %f\n', PSNR_Unet_syn);
+fprintf('PSNR of Unet_syn is %f\n', PSNR_Unet_syn);
 
 SSIM_xQSM_invivo = ssim(xQSM_invivo_recon, single(label));
 fprintf('SSIM of xQSM_invivo is %f\n', SSIM_xQSM_invivo);
 SSIM_Unet_invivo = ssim(Unet_invivo_recon, single(label));
-printf('SSIM of Unet_invivo is %f\n', SSIM_Unet_invivo);
+fprintf('SSIM of Unet_invivo is %f\n', SSIM_Unet_invivo);
 SSIM_xQSM_syn = ssim(xQSM_syn_recon, single(label));
-printf('SSIM of xQSM_syn is %f\n', SSIM_xQSM_syn);
+fprintf('SSIM of xQSM_syn is %f\n', SSIM_xQSM_syn);
 SSIM_Unet_syn = ssim(Unet_syn_recon, single(label));
-printf('SSIM of Unet_syn is %f\n', SSIM_Unet_syn);
+fprintf('SSIM of Unet_syn is %f\n', SSIM_Unet_syn);
 
 %% save the files for ROI measurements; 
 nii = make_nii(xQSM_invivo_recon, [1, 1, 1]);
