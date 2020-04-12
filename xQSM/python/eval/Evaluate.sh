@@ -3,7 +3,7 @@
 #SBATCH --job-name=Demo
 #SBATCH -n 1
 #SBATCH -c 3
-#SBATCH --mem=50000
+#SBATCH --mem=300000
 #SBATCH -e Error.err
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:tesla-smx2:1
