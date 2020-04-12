@@ -32,7 +32,7 @@ title('Slice 80 of the COSMOS Label (ppm)');
 
 
 %% start recons
-if ~canUseGPU()
+if canUseGPU()
     % (1) if your MATLAB is configured with CUDA GPU acceleration
     Unet_invivo_recon = Eval(field, 'Unet_invivo', 'gpu');
     xQSM_invivo_recon = Eval(field, 'xQSM_invivo', 'gpu');
