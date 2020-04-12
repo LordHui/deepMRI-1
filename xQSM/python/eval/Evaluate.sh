@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH --job-name=yang_test_pytorch
+#SBATCH --job-name=Demo
 #SBATCH -n 1
 #SBATCH -c 3
 #SBATCH --mem=50000
-#SBATCH -e ResNet_error.err
+#SBATCH -e Error.err
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:tesla-smx2:1
 
