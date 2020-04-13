@@ -12,6 +12,7 @@ import scipy.io as scio
 from collections import OrderedDict
 # import argparse
 import time
+from torch.autograd import Variable
 from utils import ssim, psnr
 ###############################################################
 
@@ -58,13 +59,19 @@ def Eval(Field, NetName):
         if torch.cuda.is_available():  ## if GPU is available; 
             Net = nn.DataParallel(Net) ## our network is trained with dataparallel wrapper;
             Net.load_state_dict(torch.load(model_weights_path))
+            Net = Net.module
             device = torch.device("cuda:0")
             Net.to(device)
             Net.eval()  ## set the model to evaluation mode
             Field = Field.to(device)
         else:
-            weights = torch.load(model_weights_path, map_location=lambda storage, loc: storage)
+            """
+            for now we dont recommend to use CPU for network inference because pytorch did not provide 
+            optimized calculation for Convnets on CPU; 
+            """
+            weights = torch.load(model_weights_path, map_location='cpu')  
             new_state_dict = OrderedDict()
+            print(new_state_dict)
             for k, v in weights.items():
                 ## remove the first 7 charecters  "module." of the network weights 
                 ## files to load the net into cpu, because our network is saved 
@@ -73,9 +80,11 @@ def Eval(Field, NetName):
                 new_state_dict[name] = v
             Net.load_state_dict(new_state_dict)
             Net.eval()  ## set the model to evaluation mode
+            print(Net.state_dict)
         ################ Evaluation ##################
         time_start = time.time()
-        Recon = Net(Field)
+        print(Field.size())
+        Recon = Net(Variable(Field))
         time_end = time.time()
         print('%f seconds elapsed!' % (time_end - time_start))
         Recon = torch.squeeze(Recon, 0)
@@ -111,53 +120,57 @@ if __name__ == '__main__':
     """
     Demonstration on a simulated COSMOS data; 
     """
-    ## Data Load;        
-    print('Data Loading')   
-    Field, aff = Read_nii('field_input.nii')
-    mask = Field != 0 
-    ## note the size of the field map input needs to be divisibel by the factor
-    ## otherwise 0 padding should be done first
-    imSize = np.shape(Field)
-    if np.mod(imSize,  8).any():
-        Field, pos = ZeroPadding(Field, 8)  # ZeroPadding
-    Field = torch.from_numpy(Field) 
-    ## The networks in pytorch only supports inputs that are a mini-batch of samples,
-    ## and not a single sample. Therefore we need  to squeeze the 3D tensor to be 
-    ## a 5D tesor for model evaluation.  
-    Field = torch.unsqueeze(Field, 0)
-    Field = torch.unsqueeze(Field, 0)
-    Field = Field.float()
-    ## QSM Reconstruction 
-    Recon_xQSM_invivo = Eval(Field, 'xQSM_invivo')
-    Recon_Unet_invivo = Eval(Field, 'Unet_invivo')
-    #Recon_xQSM_syn = Eval(Field, 'xQSM_syn')
-    #Recon_Unet_syn = Eval(Field, 'Unet_syn')
-    if np.mod(imSize,  8).any():
-        Recon_xQSM_invivo  = ZeroRemoving(Recon_xQSM_invivo , pos) # ZeroRemoving if zeropadding were performed; 
-        Recon_Unet_invivo  = ZeroRemoving(Recon_Unet_invivo , pos) 
-    Recon_xQSM_invivo = Recon_xQSM_invivo * mask
-    Recon_Unet_invivo = Recon_Unet_invivo * mask
-    ## calculate PSNR and SSIM
-    label, aff = Read_nii('cosmos_label.nii')  # read label; 
-    print('PSNR of xQSM_invivo is %f'% (psnr(Recon_xQSM_invivo, label)))
-    print('PSNR of Unet_invivo is %f'% (psnr(Recon_Unet_invivo, label)))
-    ## Saving Results (in .mat)
-    print('saving reconstructions')
-    path = './Chi_xQSM_invivo.mat' 
-    Save_mat(Recon_xQSM_invivo, path)
-    path = './Chi_Unet_invivo.mat' 
-    Save_mat(Recon_Unet_invivo, path)
-    #path = './Chi_xQSM_syn.mat' 
-    #Save_mat(Recon_xQSM_syn, path)
-    #path = './Chi_Unet_syn.mat' 
-    #Save_mat(Recon_Unet_syn, path)
-    ## or can be stored in .nii format; 
-    path = 'Chi_xQSM_invivo.nii'
-    Save_nii(Recon_xQSM_invivo, aff, path)
-    path = 'Chi_Unet_invivo.nii'
-    Save_nii(Recon_Unet_invivo, aff, path)
-    #path = 'Chi_xQSM_syn.nii'
-    #Save_nii(Recon_xQSM_syn, aff, path)
-    #path = 'Chi_Unet_syn.nii'
-    #Save_nii(Recon_xQSM_invivo, aff, path)
-    
+    with torch.no_grad(): 
+        ## Data Load;        
+        print('Data Loading')   
+        Field, aff = Read_nii('field_input.nii')
+        print('Loading Completed')
+        mask = Field != 0 
+        ## note the size of the field map input needs to be divisibel by the factor
+        ## otherwise 0 padding should be done first
+        print('ZeroPadding')
+        imSize = np.shape(Field)
+        if np.mod(imSize,  8).any():
+            Field, pos = ZeroPadding(Field, 8)  # ZeroPadding
+        Field = torch.from_numpy(Field) 
+        ## The networks in pytorch only supports inputs that are a mini-batch of samples,
+        ## and not a single sample. Therefore we need  to squeeze the 3D tensor to be 
+        ## a 5D tesor for model evaluation.  
+        Field = torch.unsqueeze(Field, 0)
+        Field = torch.unsqueeze(Field, 0)
+        Field = Field.float()
+        ## QSM Reconstruction 
+        print('Reconstruction')
+        Recon_xQSM_invivo = Eval(Field, 'xQSM_invivo')
+        Recon_Unet_invivo = Eval(Field, 'Unet_invivo')
+        #Recon_xQSM_syn = Eval(Field, 'xQSM_syn')
+        #Recon_Unet_syn = Eval(Field, 'Unet_syn')
+        if np.mod(imSize,  8).any():
+            Recon_xQSM_invivo  = ZeroRemoving(Recon_xQSM_invivo , pos) # ZeroRemoving if zeropadding were performed; 
+            Recon_Unet_invivo  = ZeroRemoving(Recon_Unet_invivo , pos) 
+        Recon_xQSM_invivo = Recon_xQSM_invivo * mask
+        Recon_Unet_invivo = Recon_Unet_invivo * mask
+        ## calculate PSNR and SSIM
+        label, aff = Read_nii('cosmos_label.nii')  # read label; 
+        print('PSNR of xQSM_invivo is %f'% (psnr(Recon_xQSM_invivo, label)))
+        print('PSNR of Unet_invivo is %f'% (psnr(Recon_Unet_invivo, label)))
+        ## Saving Results (in .mat)
+        print('saving reconstructions')
+        path = './Chi_xQSM_invivo.mat' 
+        Save_mat(Recon_xQSM_invivo, path)
+        path = './Chi_Unet_invivo.mat' 
+        Save_mat(Recon_Unet_invivo, path)
+        #path = './Chi_xQSM_syn.mat' 
+        #Save_mat(Recon_xQSM_syn, path)
+        #path = './Chi_Unet_syn.mat' 
+        #Save_mat(Recon_Unet_syn, path)
+        ## or can be stored in .nii format; 
+        path = 'Chi_xQSM_invivo.nii'
+        Save_nii(Recon_xQSM_invivo, aff, path)
+        path = 'Chi_Unet_invivo.nii'
+        Save_nii(Recon_Unet_invivo, aff, path)
+        #path = 'Chi_xQSM_syn.nii'
+        #Save_nii(Recon_xQSM_syn, aff, path)
+        #path = 'Chi_Unet_syn.nii'
+        #Save_nii(Recon_xQSM_invivo, aff, path)
+        
