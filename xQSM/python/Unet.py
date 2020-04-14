@@ -17,7 +17,7 @@ class Unet(nn.Module):
         self.EncodeConvs = []
         self.DecodeConvs = []
         self.EncodingDepth = EncodingDepth
-        initial_num_layers = 16
+        initial_num_layers = 64
         temp = list(range(1, EncodingDepth + 1))
 ################### Encoding Layers #######################
         for encodingLayer in temp:
