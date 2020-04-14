@@ -12,7 +12,6 @@ import scipy.io as scio
 from collections import OrderedDict
 # import argparse
 import time
-from torch.autograd import Variable
 from utils import ssim, psnr
 ###############################################################
 
@@ -57,9 +56,12 @@ def Eval(Field, NetName):
         else:
             sys.stderr.write('Network Type Invalid!\n')
         if torch.cuda.is_available():  ## if GPU is available; 
+            """
+            It is highly recommended that this demo should be run on a GPU (8G memory or higher)
+            """
             Net = nn.DataParallel(Net) ## our network is trained with dataparallel wrapper;
             Net.load_state_dict(torch.load(model_weights_path))
-            Net = Net.module
+            #Net = Net.module
             device = torch.device("cuda:0")
             Net.to(device)
             Net.eval()  ## set the model to evaluation mode
@@ -83,8 +85,9 @@ def Eval(Field, NetName):
             print(Net.state_dict)
         ################ Evaluation ##################
         time_start = time.time()
-        print(Field.size())
-        Recon = Net(Variable(Field))
+        print('input image size: ',end ="")
+        print(Field.size())            
+        Recon = Net(Field)
         time_end = time.time()
         print('%f seconds elapsed!' % (time_end - time_start))
         Recon = torch.squeeze(Recon, 0)
@@ -141,8 +144,8 @@ if __name__ == '__main__':
         Field = Field.float()
         ## QSM Reconstruction 
         print('Reconstruction')
-        Recon_xQSM_invivo = Eval(Field, 'xQSM_invivo')
         Recon_Unet_invivo = Eval(Field, 'Unet_invivo')
+        Recon_xQSM_invivo = Eval(Field, 'xQSM_invivo')
         #Recon_xQSM_syn = Eval(Field, 'xQSM_syn')
         #Recon_Unet_syn = Eval(Field, 'Unet_syn')
         if np.mod(imSize,  8).any():
