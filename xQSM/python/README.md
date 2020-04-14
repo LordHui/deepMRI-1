@@ -1,7 +1,7 @@
 ****************************************************************************************
 necessary installation for usage： 
-pytorch 1.10 framework or later (https://pytorch.org/get-started/locally/)
-pip install nibabel
+pytorch 1.10 framework or later (https://pytorch.org/get-started/locally/) \n
+pip install nibabel \n
 pip install scipy
 ****************************************************************************************
 
