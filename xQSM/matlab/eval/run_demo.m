@@ -7,7 +7,7 @@ addpath ./NIFTI
 
 
 %% read in field map and COSMOS map (3rd dimension is z/B0 direction)
-nii = load_nii('field_input.nii'); % replace the file name with yours. 
+nii = load_nii('../../field_input.nii'); % replace the file name with yours. 
 field = double(nii.img);
 mask = field ~= 0; % brain tissue mask
 
@@ -23,7 +23,7 @@ title('Slice 80 of the Input Field Map (ppm)');
 
 
 %% read label (for evaluation purpose)
-nii = load_nii('cosmos_label.nii'); % replace the file name with yours. 
+nii = load_nii('../../cosmos_label.nii'); % replace the file name with yours. 
 label = double(nii.img);
 
 % illustration of one central axial slice of the COSMOS label 

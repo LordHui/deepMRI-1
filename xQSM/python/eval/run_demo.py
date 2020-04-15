@@ -126,7 +126,7 @@ if __name__ == '__main__':
     with torch.no_grad(): 
         ## Data Load;        
         print('Data Loading')   
-        Field, aff = Read_nii('field_input.nii')
+        Field, aff = Read_nii('../../field_input.nii')
         print('Loading Completed')
         mask = Field != 0 
         ## note the size of the field map input needs to be divisibel by the factor
@@ -154,7 +154,7 @@ if __name__ == '__main__':
         Recon_xQSM_invivo = Recon_xQSM_invivo * mask
         Recon_Unet_invivo = Recon_Unet_invivo * mask
         ## calculate PSNR and SSIM
-        label, aff = Read_nii('cosmos_label.nii')  # read label; 
+        label, aff = Read_nii('../../cosmos_label.nii')  # read label; 
         print('PSNR of xQSM_invivo is %f'% (psnr(Recon_xQSM_invivo, label)))
         print('PSNR of Unet_invivo is %f'% (psnr(Recon_Unet_invivo, label)))
         ## Saving Results (in .mat)
