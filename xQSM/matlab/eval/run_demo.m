@@ -26,6 +26,10 @@ drawnow;
 nii = load_nii('../../cosmos_label.nii'); % replace the file name with yours. 
 label = double(nii.img);
 
+%% label image normalization (mean of brain tissue region set to 0) for later comparison;
+label = label - sum(label(:)) / sum(mask(:));
+label = label .* mask;
+
 % illustration of one central axial slice of the COSMOS label 
 figure; 
 imagesc(label(:,:,80)'); colormap gray; axis equal tight; colorbar; caxis([-0.1, 0.2]);
@@ -39,7 +43,7 @@ for k = 1:length(recon_methods_list)
     recon_method = recon_methods_list{k};
     fprintf('Reconstructing QSM using %s\n', recon_method);
 
-    if canUseGPU()
+    if ~canUseGPU()
         % (1) if your MATLAB is configured with CUDA GPU acceleration
         QSM_recon = Eval(field, recon_method, 'gpu');
     else
@@ -53,8 +57,6 @@ for k = 1:length(recon_methods_list)
     end
 
     %% image normalization (mean of brain tissue region set to 0)
-    label = label - sum(label(:)) / sum(mask(:));
-    label = label .* mask; 
     QSM_recon = QSM_recon - sum(QSM_recon(:)) / sum(mask(:));
     QSM_recon = QSM_recon .* mask; 
 
@@ -69,9 +71,9 @@ for k = 1:length(recon_methods_list)
     
     %% use default pnsr and ssim 
     PSNR_recon = psnr(QSM_recon, single(label));
-    fprintf('PSNR of xQSM_invivo is %f\n', PSNR_recon);
+    fprintf('PSNR of %s is %f\n', recon_method, PSNR_recon);
     SSIM_recon = ssim(QSM_recon, single(label));
-    fprintf('SSIM of xQSM_invivo is %f\n\n', SSIM_recon);
+    fprintf('SSIM of %s is %f\n\n', recon_method, SSIM_recon);
 
     %% save the files for ROI measurements; 
     nii = make_nii(QSM_recon, [1, 1, 1]);
