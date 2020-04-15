@@ -15,7 +15,7 @@ class xQSM(nn.Module):
         self.DecodeConvs = []
         #self.downs = []
         self.EncodingDepth = EncodingDepth
-        initial_num_layers = 64
+        initial_num_layers = 16
         temp = list(range(1, EncodingDepth + 1))
         self.InputOct = OctEncodingBlocks(1, initial_num_layers, alphax = 1, alphay = 0.5)
 ################### Encoding Layers #######################

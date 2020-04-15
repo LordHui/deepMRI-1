@@ -60,11 +60,11 @@ class OctUp(nn.Module):
             self.up_HH = nn.ConvTranspose3d(self.In_H, self.In_H, 2, stride = 2, bias = hasbias)
             self.up_LH = nn.ConvTranspose3d(self.In_L, self.In_H, 4, stride = 4, bias = hasbias)
             self.BN_H = nn.BatchNorm3d(self.In_H)
-            self.ReLU_H = nn.ReLU()
+            self.ReLU_H = nn.ReLU(inplace = True)
             self.up_LL = nn.ConvTranspose3d(self.In_L, self.In_L, 2, stride = 2, bias = hasbias)
             self.up_HL = nn.Conv3d(self.In_H, self.In_L, 3, padding= 1, bias = hasbias)
             self.BN_L = nn.BatchNorm3d(self.In_L)
-            self.ReLU_L = nn.ReLU()
+            self.ReLU_L = nn.ReLU(inplace = True)
 
     def forward(self, x_h, x_l):
         y_h1 = self.up_HH(x_h)
@@ -98,8 +98,8 @@ class  OctConv(nn.Module):
             self.convHL = nn.Conv3d(self.In_H, self.Out_L , ks, padding=pd, bias = hasbias)
             self.BN_HH = nn.BatchNorm3d(self.Out_H)
             self.BN_HL = nn.BatchNorm3d(self.Out_L)
-            self.ReLU_H = nn.ReLU()
-            self.ReLU_L = nn.ReLU()
+            self.ReLU_H = nn.ReLU(inplace = True)
+            self.ReLU_L = nn.ReLU(inplace = True)
         elif alphay == 1:
             ## only for the final output layer
             self.convHH = nn.Conv3d(self.In_H, self.Out_H , ks, padding=pd, bias = hasbias)
@@ -107,7 +107,7 @@ class  OctConv(nn.Module):
             self.up = nn.ConvTranspose3d(self.Out_H, self.Out_H, 2, stride = 2, bias = hasbias)
             self.BN_HH = nn.BatchNorm3d(self.Out_H)
             self.BN_LH = nn.BatchNorm3d(self.Out_H)
-            self.ReLU_H = nn.ReLU()
+            self.ReLU_H = nn.ReLU(inplace = True)
             self.FinalConv = nn.Conv3d(self.Out_H, 1, 1, stride = 1, padding = 0, bias = hasbias)
         else:
             ## mid layers
@@ -118,10 +118,10 @@ class  OctConv(nn.Module):
             self.up = nn.ConvTranspose3d(self.Out_H, self.Out_H, 2, stride = 2, bias = hasbias)
             self.BN_HH = nn.BatchNorm3d(self.Out_H)
             self.BN_LH = nn.BatchNorm3d(self.Out_H)
-            self.ReLU_H = nn.ReLU()
+            self.ReLU_H = nn.ReLU(inplace = True)
             self.BN_LL = nn.BatchNorm3d(self.Out_L)
             self.BN_HL = nn.BatchNorm3d(self.Out_L)
-            self.ReLU_L = nn.ReLU()
+            self.ReLU_L = nn.ReLU(inplace = True)
 
     def forward(self, x_h, x_l):
         ## Y_H = conv(H) + upsample(conv(L))

@@ -10,10 +10,10 @@ class EncodingBlocks(nn.Module):
         self.EncodeConv = nn.Sequential(
             nn.Conv3d(num_in, num_out, 3, padding=1),
             nn.BatchNorm3d(num_out),
-            nn.ReLU(),
+            nn.ReLU(inplace = True),
             nn.Conv3d(num_out, num_out, 3, padding=1),
             nn.BatchNorm3d(num_out),
-            nn.ReLU()
+            nn.ReLU(inplace = True)
         )
 
     def forward(self, x):
@@ -27,10 +27,10 @@ class MidBlocks(nn.Module):
         self.MidConv = nn.Sequential(
             nn.Conv3d(num_ch, 2 * num_ch, 3, padding=1),
             nn.BatchNorm3d(2 * num_ch),
-            nn.ReLU(),
+            nn.ReLU(inplace = True),
             nn.Conv3d(2 * num_ch, num_ch, 3, padding=1),
             nn.BatchNorm3d(num_ch),
-            nn.ReLU()
+            nn.ReLU(inplace = True)
         )
 
     def forward(self, x):
@@ -45,21 +45,21 @@ class DecodingBlocks(nn.Module):
             self.up = nn.Sequential(
                 nn.Upsample(scale_factor=2, mode='nearest'),
                 nn.BatchNorm3d(num_in),
-                nn.ReLU()
+                nn.ReLU(inplace = True)
             )
         else:
             self.up = nn.Sequential(
                 nn.ConvTranspose3d(num_in, num_in, 2, stride = 2),
                 nn.BatchNorm3d(num_in),
-                nn.ReLU()
+                nn.ReLU(inplace = True)
             )
         self.DecodeConv = nn.Sequential(
             nn.Conv3d(2 * num_in, num_in, 3, padding=1),
             nn.BatchNorm3d(num_in),
-            nn.ReLU(),
+            nn.ReLU(inplace = True),
             nn.Conv3d(num_in, num_out, 3, padding=1),
             nn.BatchNorm3d(num_out),
-            nn.ReLU()
+            nn.ReLU(inplace = True)
         )
           
     def forward(self, x1, x2):
