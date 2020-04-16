@@ -43,7 +43,7 @@ for k = 1:length(recon_methods_list)
     recon_method = recon_methods_list{k};
     fprintf('Reconstructing QSM using %s\n', recon_method);
 
-    if ~canUseGPU()
+    if canUseGPU()
         % (1) if your MATLAB is configured with CUDA GPU acceleration
         QSM_recon = Eval(field, recon_method, 'gpu');
     else
